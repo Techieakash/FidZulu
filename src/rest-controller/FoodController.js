@@ -1,19 +1,20 @@
 
 const express = require('express');
 const FoodDao = require('../dao/FoodDao');
-const router  = express.Router();
-const bodyParser = require('body-parser'); 
+const router = express.Router();
+const bodyParser = require('body-parser');
 const url = require('url');
 
 
 class FoodController {
-    constructor() { 
+    constructor() {
         this.port = process.env.PORT || 3032;
         this.FoodDao = new FoodDao();
         this.app = express();
         this.app.use(bodyParser.json());
         router.get('/food/all/:location', this.getAllFoods.bind(this));
         router.get('/food/all/:location/search', this.handleFoodRequest.bind(this));
+        router.get('/food/team', this.handleteamrequest.bind(this));
         this.app.use('/', router);
     }
 
@@ -21,11 +22,17 @@ class FoodController {
         this.app.listen(this.port, () => console.log(`listening on port ${this.port}`))
     }
 
+    handleteamrequest(req, res) {
+        res.send({
+            "team": "Food",
+            "membersNames": ["Udupa","Aryan"]
+        })
+    }
     getAllFoods(req, res) {
         const location = req.params.location;
         try {
             const foods = this.FoodDao.getAllFoodDao(location);
-            console.log("Size of the foods",foods.length);
+            console.log("Size of the foods", foods.length);
             res.json(foods);
         }
         catch (err) {
@@ -36,7 +43,7 @@ class FoodController {
 
     handleFoodRequest(req, res) {
         const { location } = req.params;
-        console.log("Location",location)
+        console.log("Location", location)
         const queryParams = req.query;
         console.log(queryParams);
         console.log('got into foods');
