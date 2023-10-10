@@ -4,6 +4,7 @@
   "description": "Code backend for FidZulu project",
   "main": "index.js",
   "scripts": {
+    "start": "node src/rest-controller/FoodController.js",
     "test": "npm test"
   },
   "repository": {
