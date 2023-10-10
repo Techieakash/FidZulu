@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Code backend for FidZulu project",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srujangowda14/FidZuluBackend.git"
+  },
+  "author": "Backend team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srujangowda14/FidZuluBackend/issues"
+  },
+  "homepage": "https://github.com/srujangowda14/FidZuluBackend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
