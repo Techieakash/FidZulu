@@ -2,27 +2,28 @@
 const fs = require('fs');
 
 const FoodFilePath = `assets/data/Food.json`;
-
+const fileContents = fs.readFileSync(FoodFilePath, 'utf-8');
 class FoodDao {
     constructor() {
-        const fileContents = fs.readFileSync(FoodFilePath, 'utf-8');
-        this.foods = JSON.parse(fileContents);
+     
     }
 
     getAllFoodDao(location) {
+      
+           this.foods = JSON.parse(fileContents);
             const FoodData = this.foods;
             const convertedFood = FoodData.map((food) => {
                 let rate = 1.0;
                 if (location == "US-NC") {
-                    rate = 0.9;
+                    rate = 0.23;
                 }
                 if (location == "IN") {
-                    rate = 0.8;
+                    rate = 0.18;
                 }
-                if (location == "IN") {
-                    rate = 0.85;
+                if (location == "IE") {
+                    rate = 0.08;
                 }
-                food.price = food.price * rate;
+                food.price = food.price+food.price * rate;
                 return {
                     ...food
                 };
