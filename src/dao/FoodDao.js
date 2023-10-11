@@ -40,22 +40,6 @@ class FoodDao {
             }
             return convertedFood;
     }
-
-    getFilterFoodDao(queryObject){
-        const foods = this.FoodDao.getAllFoodDao(location);
-        const filteredFoods = foods.filter(food => {
-            if (
-                (queryObject.minprice && food.price < parseInt(queryObject.minprice)) ||
-                (queryObject.maxprice && food.price > parseInt(queryObject.maxprice)) ||
-                (queryObject.rating && food.rating < parseInt(queryObject.rating)) ||
-                (queryObject.brand && food.brand !== queryObject.brand)
-            ) {
-                return false; 
-            }
-            return true; // Include this food item
-        });
-        return filteredFoods;
-    }
 }
 
 module.exports = FoodDao;
