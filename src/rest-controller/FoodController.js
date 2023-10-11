@@ -1,4 +1,4 @@
-
+const cors = require("cors");
 const express = require('express');
 const FoodDao = require('../dao/FoodDao');
 const router = express.Router();
@@ -15,6 +15,7 @@ class FoodController {
         router.get('/food/all/:location', this.handleFoodRequest.bind(this));
         router.get('/food/team', this.handleteamrequest.bind(this));
         this.app.use('/', router);
+        this.app.use(cors());
     }
 
     start() {
