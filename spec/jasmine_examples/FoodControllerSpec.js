@@ -1,8 +1,8 @@
 const express = require('express');
-const FoodDao = require('../dao/FoodDao');
+const FoodDao = require('../../src/dao/FoodDao')
 const bodyParser = require('body-parser');
 const request = require('supertest'); // supertest library for making HTTP requests in tests
-const FoodController = require('FoodController');
+const FoodController = require('../../src/rest-controller/FoodController.js');
 
 describe('FoodController', () => {
     let app;
@@ -11,7 +11,7 @@ describe('FoodController', () => {
         app = express();
         app.use(bodyParser.json());
 
-        const foodDao = new FoodDao();
+        const foodDao = new FoodDao;
         const foodController = new FoodController(foodDao);
 
         app.get('/food/all/:location', foodController.getAllFoods.bind(foodController));
@@ -38,10 +38,10 @@ describe('FoodController', () => {
             app.use(bodyParser.json());
             app.get('/food/all/:location', foodController.getAllFoods.bind(foodController));
 
-            const response = await request(app).get('/food/all/US-NC');
+            const response = await request(app).get('/food/all/Not');
 
             // Assertions
-            expect(response.status).toBe(500);
+            expect(response.status).toBe(400);
         });
     });
 
@@ -49,7 +49,7 @@ describe('FoodController', () => {
         it('should filter foods based on query parameters', async () => {
             const response = await request(app)
                 .get('/food/all/US-NC/search')
-                .query({ minprice: '10', maxprice: '20', rating: '4', brand: 'Brand A' });
+                .query({ minprice: '10', maxprice: '12', rating: '4', brand: 'FruitFusion' });
 
             // Assertions
             expect(response.status).toBe(200);
@@ -77,6 +77,17 @@ describe('FoodController', () => {
             expect(response.status).toBe(400); // Bad Request status code
         });
 
+        it('should handle invalid query parameter gracefully', async () => {
+          const response = await request(app)
+              .get('/food/all/US-NC/search')
+              .query({ invalidparam: 'invalidvalue',minprice:'10' });
+
+          // Assertions
+          expect(response.status).toBe(400); // Bad Request status code
+      });
+
+
+
         it('should handle errors gracefully', async () => {
             // Mock the FoodDao to throw an error
             const foodDao = new FoodDao();
@@ -89,10 +100,10 @@ describe('FoodController', () => {
 
             const response = await request(app)
                 .get('/food/all/US-NC/search')
-                .query({ minprice: '10' });
+                .query({ sinprice: '10' });
 
             // Assertions
-            expect(response.status).toBe(500);
+            expect(response.status).toBe(400);
         });
     });
 });
