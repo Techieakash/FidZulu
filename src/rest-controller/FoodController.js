@@ -12,7 +12,6 @@ class FoodController {
         this.FoodDao = new FoodDao();
         this.app = express();
         this.app.use(bodyParser.json());
-        // router.get('/food/all/:location', this.getAllFoods.bind(this));
         router.get('/food/all/:location', this.handleFoodRequest.bind(this));
         router.get('/food/team', this.handleteamrequest.bind(this));
         this.app.use('/', router);
@@ -29,24 +28,6 @@ class FoodController {
         })
     }
 
-    getAllFoods(req, res) {
-        const location = req.params.location;
-        try {
-            const foods = this.FoodDao.getAllFoodDao(location);
-            if (foods != null) {
-                console.log("Size of the foods", foods.length);
-                res.json(foods);
-            }
-            else {
-                res.status(400).json({ error: "Bad request" });
-            }
-
-        }
-        catch (err) {
-            console.error(`error on GET foods: ${err}`);
-            res.status(500).json({ error: err });
-        }
-    }
 
     handleFoodRequest(req, res) {
         const { location } = req.params;
@@ -56,6 +37,10 @@ class FoodController {
         console.log('got into foods');
         const foods =this.FoodDao.getAllFoodDao(location);
       
+        if (foods == null) {
+            res.status(400).json({ error: "Bad request" });
+            return;
+        }
         if (Object.keys(queryParams).length === 0) {
             console.log("No query parameters provided");
             res.json(foods);
