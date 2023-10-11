@@ -23,8 +23,8 @@ class FoodController {
 
     handleteamrequest(req, res) {
         res.send({
-            "team": "Food",
-            "membersNames": ["Udupa", "Aryan"]
+            "team": "Halwai 👨‍🍳 , 👨‍🍳",
+            "membersNames": ["Udupa, Akash", "Kumar, Aryan"]
         })
     }
 
