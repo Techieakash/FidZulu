@@ -51,7 +51,6 @@ class FoodController {
                 if(queryParams.minprice||queryParams.maxprice||queryParams.brand||queryParams.rating)
                     check=1;
             }
-            
     
             try {
                 console.log("Inside foods",foods)
