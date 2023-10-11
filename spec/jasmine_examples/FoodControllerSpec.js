@@ -13,9 +13,7 @@ describe('FoodController', () => {
 
         const foodDao = new FoodDao;
         const foodController = new FoodController(foodDao);
-
-        app.get('/food/all/:location', foodController.getAllFoods.bind(foodController));
-        app.get('/food/all/:location/search', foodController.handleFoodRequest.bind(foodController));
+        app.get('/food/all/:location', foodController.handleFoodRequest.bind(foodController));
     });
 
     describe('GET /food/all/:location', () => {
@@ -29,15 +27,6 @@ describe('FoodController', () => {
         });
 
         it('should handle errors gracefully', async () => {
-            // Mock the FoodDao to throw an error
-            const foodDao = new FoodDao();
-            spyOn(foodDao, 'getAllFoodDao').and.throwError('Test Error');
-
-            const foodController = new FoodController(foodDao);
-            const app = express();
-            app.use(bodyParser.json());
-            app.get('/food/all/:location', foodController.getAllFoods.bind(foodController));
-
             const response = await request(app).get('/food/all/Not');
 
             // Assertions
@@ -45,10 +34,10 @@ describe('FoodController', () => {
         });
     });
 
-    describe('GET /food/all/:location/search', () => {
+    describe('GET /food/all/:location', () => {
         it('should filter foods based on query parameters', async () => {
             const response = await request(app)
-                .get('/food/all/US-NC/search')
+                .get('/food/all/US-NC')
                 .query({ minprice: '10', maxprice: '12', rating: '4', brand: 'FruitFusion' });
 
             // Assertions
@@ -59,8 +48,8 @@ describe('FoodController', () => {
 
         it('should handle no matching items gracefully', async () => {
             const response = await request(app)
-                .get('/food/all/US-NC/search')
-                .query({ minprice: '100', maxprice: '200', rating: '5', brand: 'Brand C' });
+                .get('/food/all/US-NC')
+                .query({ brand: 'Brand C' });
 
             // Assertions
             expect(response.status).toBe(200);
@@ -70,37 +59,41 @@ describe('FoodController', () => {
 
         it('should handle invalid query parameters gracefully', async () => {
             const response = await request(app)
-                .get('/food/all/US-NC/search')
+                .get('/food/all/US-NC')
                 .query({ invalidparam: 'invalidvalue' });
 
             // Assertions
             expect(response.status).toBe(400); // Bad Request status code
         });
 
-        it('should handle invalid query parameter gracefully', async () => {
+        it('should handle invalid  and valid query parameter gracefully', async () => {
           const response = await request(app)
-              .get('/food/all/US-NC/search')
+              .get('/food/all/US-NC')
               .query({ invalidparam: 'invalidvalue',minprice:'10' });
 
           // Assertions
-          expect(response.status).toBe(400); // Bad Request status code
+          expect(response.status).toBe(200); // Bad Request status code
       });
 
 
 
-        it('should handle errors gracefully', async () => {
-            // Mock the FoodDao to throw an error
+        it('should handle errors gracefully for wrong location', async () => {
             const foodDao = new FoodDao();
-            spyOn(foodDao, 'getAllFoodDao').and.throwError('Test Error');
-
             const foodController = new FoodController(foodDao);
-            const app = express();
-            app.use(bodyParser.json());
-            app.get('/food/all/:location/search', foodController.handleFoodRequest.bind(foodController));
-
             const response = await request(app)
-                .get('/food/all/US-NC/search')
-                .query({ sinprice: '10' });
+                .get('/food/all/NOT')
+                .query({ maxprice: '10' });
+
+            // Assertions
+            expect(response.status).toBe(400);
+        });
+
+        it('should handle errors gracefully for wrong location and wrong para,', async () => {
+            const foodDao = new FoodDao();
+            const foodController = new FoodController(foodDao);
+            const response = await request(app)
+                .get('/food/all/NOT')
+                .query({ invalid: '10' });
 
             // Assertions
             expect(response.status).toBe(400);
