@@ -48,7 +48,7 @@ describe('FoodController', () => {
         it('should filter foods based on query parameters', async () => {
             const response = await request(app)
                 .get('/food/all/US-NC')
-                .query({ minprice: '10', maxprice: '12', rating: '4', brand: 'FruitFusion' });
+                .query({ minprice: '10', maxprice: '12', rating: '3', brand: 'FruitFusion' });
 
 
 
