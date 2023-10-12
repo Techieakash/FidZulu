@@ -25,17 +25,16 @@ class FoodController {
     handleteamrequest(req, res) {
         res.send({
             "team": "Halwai 👨‍🍳 , 👨‍🍳",
-            "membersNames": ["Udupa, Akash", "Kumar, Aryan"]
+            "memberNames": ["Udupa, Akash", "Kumar, Aryan"]
         })
     }
 
 
     handleFoodRequest(req, res) {
         const { location } = req.params;
-        console.log("Location", location)
+        
         const queryParams = req.query;
-        console.log(queryParams);
-        console.log('got into foods');
+     
         const foods =this.FoodDao.getAllFoodDao(location);
       
         if (foods == null) {
@@ -43,7 +42,7 @@ class FoodController {
             return;
         }
         if (Object.keys(queryParams).length === 0) {
-            console.log("No query parameters provided");
+           
             res.json(foods);
         } else {
             let check = 0;
@@ -54,9 +53,9 @@ class FoodController {
             }
     
             try {
-                console.log("Inside foods",foods)
+              
                 let result =foods;
-                console.log("checkkkking",result)
+               
                 if (queryParams.minprice || check == 1) {
                     const minPrice = parseFloat(queryParams.minprice);
 
@@ -83,7 +82,7 @@ class FoodController {
                     res.status(400).json({error:"Bad request"})
                 }
             } catch (err) {
-                console.log("Caught exception.");
+               
                 res.status(500).send('Something broke!');
             }
         }
